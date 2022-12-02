@@ -4,7 +4,7 @@
 pub struct Day01;
 
 impl Day01 {
-    fn relocate(input: u32, arr: &mut [u32; 3]) {
+    fn check_best_3(input: u32, arr: &mut [u32; 3]) {
         if input < arr[0] {
             return;
         }
@@ -18,15 +18,6 @@ impl Day01 {
             arr[1] = input;
         } else if input > arr[0] && input < arr[1] && input < arr[2] {
             arr[0] = input;
-        }
-    }
-
-    fn check_best_3(input: u32, arr: &mut [u32; 3]) {
-        for i in 0..arr.len() {
-            if input > arr[i] {
-                Day01::relocate(input, arr);
-                break;
-            }
         }
     }
 
