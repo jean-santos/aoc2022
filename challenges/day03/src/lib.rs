@@ -19,29 +19,24 @@ impl Day03 {
 
     pub fn repetead_items_line(input: &str) -> Vec<char> {
         let len = input.len();
+        let half = len / 2;
 
-        let mut repeated_items: Vec<char> = vec![];
-        let haystack = input.chars().take(len / 2);
-        for c in haystack {
-            let repeated = input.chars().skip(len / 2).find(|inp| *inp == c);
-            match repeated {
-                Some(i) => {
-                    if !repeated_items.iter().any(|each| *each == i) {
-                        repeated_items.push(i);
-                    }
-                }
-                None => {}
-            }
-        }
+        let [left, right] = [input[..half].as_bytes(), input[half..].as_bytes()];
 
-        repeated_items
+        let dup = left
+            .iter()
+            .unique()
+            .chain(right.iter().unique())
+            .duplicates();
+
+        dup.map(|c| *c as char).collect_vec()
     }
 
     pub fn priority_value(input: char) -> u16 {
         match input {
-            'a'..='z' => input as u16 - 'a' as u16 + 1,
-            'A'..='Z' => input as u16 - 'A' as u16 + 27,
-            _ => 0,
+            'a'..='z' => (input as u8 - b'a' + 1) as u16,
+            'A'..='Z' => (input as u8 - b'A' + 27) as u16,
+            _ => panic!("shouldn't happen"),
         }
     }
 
@@ -59,14 +54,9 @@ impl Day03 {
         let mut char_count: HashMap<char, i32> = HashMap::new();
 
         for _ in 0..3 {
-            let line = input.next()?;
-            let uniq_items_line = line.chars().unique();
+            let uniq_items_line = input.next()?.chars().unique();
             for item in uniq_items_line {
-                if char_count.contains_key(&item) {
-                    char_count.entry(item).and_modify(|m| *m += 1);
-                } else {
-                    char_count.insert(item, 1);
-                }
+                char_count.entry(item).and_modify(|m| *m += 1).or_insert(1);
             }
         }
 
