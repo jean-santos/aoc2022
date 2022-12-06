@@ -13,31 +13,15 @@ impl Day06 {
     }
 
     pub fn get_unique_idx_over(input: &str,size: usize) -> usize{
-        let slice : Vec<char> = input.chars().collect();
-        let mut it = slice.windows(size).enumerate();
-
-        while let Some((idx,slice)) = it.next(){
-            // println!("{:?}", slice);
-            let chars = slice.iter().unique().count();
-            if chars == size {
-                return idx + size;
-            }
-        }
-        panic!("unreachable");
+        let slice = input.as_bytes();
+        let mut it = slice.windows(size).position(|w| w.iter().all_unique());
+        it.take().unwrap() + size
     }
-}
-
-pub struct FourChars{
-    chars : (char,char,char,char),
 }
 
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
-
-    use crate::FourChars;
-    
-
     use super::Day06;
     #[test]
     pub fn first_fourth_test(){
